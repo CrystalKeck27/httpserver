@@ -97,7 +97,7 @@ async fn respond_to_request(request: &[u8]) -> Vec<u8> {
                     .open(LED_PATH)
                     .await
                     .expect("Failed to open LED brightness file");
-                file.write_all(&[value]).await.expect("Failed to write to LED brightness file");
+                file.write_all(brightness.as_bytes()).await.expect("Failed to write to LED brightness file");
                 println!("LED brightness set to: {:?}", value);
             }
         }
