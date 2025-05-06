@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 
+const LED_PATH: &str = "/sys/class/leds/led0/brightness";
+
 
 #[tokio::main]
 async fn main() {
@@ -84,7 +86,17 @@ async fn respond_to_request(request: &[u8]) -> Vec<u8> {
 
         println!("Query Parameters: {:?}", param_map);
 
-        
+        // Set LED brightness from the query parameters
+        if let Some(brightness) = param_map.get("brightness") {
+            if let Ok(value) = brightness.parse::<u8>() {
+                let mut file = tokio::fs::OpenOptions::new()
+                    .write(true)
+                    .open(LED_PATH)
+                    .await
+                    .expect("Failed to open LED brightness file");
+                file.write_all(&[value]).await.expect("Failed to write to LED brightness file");
+            }
+        }
     }
 
     if request.location == "/" {
