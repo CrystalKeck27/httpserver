@@ -91,6 +91,7 @@ async fn respond_to_request(request: &[u8]) -> Vec<u8> {
             println!("Setting LED brightness to: {:?}", brightness);
             if let Ok(value) = brightness.parse::<u8>() {
                 println!("Parsed brightness value: {:?}", value);
+                println!("Writing to LED brightness file: {:?}", LED_PATH);
                 let mut file = tokio::fs::OpenOptions::new()
                     .write(true)
                     .open(LED_PATH)
